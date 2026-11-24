@@ -1,0 +1,44 @@
+2026-11-24 08:44:55,617 - INFO - Inventory demo started
+2026-11-24 08:44:55,617 - DEBUG - Calculating total price: price=250, quantity=4
+2026-11-24 08:44:55,617 - INFO - Total price for 4 item(s) at 250 each: 1000
+2026-11-24 08:44:55,617 - DEBUG - Applying discount: total=1000, discount=10%
+2026-11-24 08:44:55,617 - INFO - Discount of 10% applied: 1000 -> 900.0
+2026-11-24 08:44:55,617 - DEBUG - Checking stock: available=50, requested=30
+2026-11-24 08:44:55,618 - INFO - Stock available: requested 30, in stock 50
+2026-11-24 08:44:55,618 - DEBUG - Checking stock: available=50, requested=80
+2026-11-24 08:44:55,618 - WARNING - Insufficient stock: requested 80, only 50 available
+2026-11-24 08:44:55,618 - DEBUG - Calculating total price: price=-100, quantity=2
+2026-11-24 08:44:55,618 - ERROR - Negative price rejected: -100
+2026-11-24 08:44:55,618 - ERROR - Operation failed
+Traceback (most recent call last):
+  File "/home/claude/product-inventory-management/inventory.py", line 113, in main
+    calculate_total_price(-100, 2)
+  File "/home/claude/product-inventory-management/inventory.py", line 35, in calculate_total_price
+    _validate_price(price)
+  File "/home/claude/product-inventory-management/inventory.py", line 19, in _validate_price
+    raise ValueError("Price cannot be negative")
+ValueError: Price cannot be negative
+2026-11-24 08:44:55,620 - INFO - Inventory demo finished
+2026-11-24 14:28:35,921 - INFO - Inventory demo started
+2026-11-24 14:28:35,921 - DEBUG - Calculating total price: price=250, quantity=4
+2026-11-24 14:28:35,921 - INFO - Total price for 4 item(s) at 250 each: 1000
+2026-11-24 14:28:35,921 - DEBUG - Applying discount: total=1000, discount=10%
+2026-11-24 14:28:35,921 - INFO - Discount of 10% applied: 1000 -> 900.0
+2026-11-24 14:28:35,921 - DEBUG - Checking stock: available=50, requested=30
+2026-11-24 14:28:35,921 - INFO - Stock available: requested 30, in stock 50
+2026-11-24 14:28:35,921 - DEBUG - Checking stock: available=50, requested=80
+2026-11-24 14:28:35,921 - WARNING - Insufficient stock: requested 80, only 50 available
+2026-11-24 14:28:35,921 - DEBUG - Calculating total price: price=-100, quantity=2
+2026-11-24 14:28:35,921 - ERROR - Negative price rejected: -100
+2026-11-24 14:28:35,921 - ERROR - Operation failed
+Traceback (most recent call last):
+  File "/Users/soham/Documents/Assignment10_python/inventory.py", line 113, in main
+    calculate_total_price(-100, 2)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/soham/Documents/Assignment10_python/inventory.py", line 35, in calculate_total_price
+    _validate_price(price)
+    ~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/soham/Documents/Assignment10_python/inventory.py", line 19, in _validate_price
+    raise ValueError("Price cannot be negative")
+ValueError: Price cannot be negative
+2026-11-24 14:28:35,929 - INFO - Inventory demo finished

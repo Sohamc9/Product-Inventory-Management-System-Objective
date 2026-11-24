@@ -1,0 +1,91 @@
+$ python -m ruff check .   (first run)
+TRY401 Redundant exception object included in `logging.exception` call
+   --> inventory.py:113:50
+    |
+111 |         calculate_total_price(-100, 2)
+112 |     except (TypeError, ValueError) as error:
+113 |         logger.exception("Operation failed: %s", error)
+    |                                                  ^^^^^
+114 |         print(f"Error: {error}")
+    |
+
+Found 1 error.
+
+# Fix: logger.exception() already records the error, so the extra argument is removed by hand
+
+$ python -m ruff check . --fix
+All checks passed!
+
+$ python -m ruff format .
+2 files reformatted
+
+$ python -m ruff check .   (final run)
+All checks passed!
+
+$ python -m ruff format --check .
+2 files already formatted
+
+$ python -m pytest -v
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /home/claude/product-inventory-management/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/claude/product-inventory-management
+collecting ... collected 26 items
+
+test_inventory.py::test_total_price_valid PASSED                         [  3%]
+test_inventory.py::test_total_price_zero_quantity PASSED                 [  7%]
+test_inventory.py::test_total_price_float_price PASSED                   [ 11%]
+test_inventory.py::test_total_price_negative_price_rejected PASSED       [ 15%]
+test_inventory.py::test_total_price_negative_quantity_rejected PASSED    [ 19%]
+test_inventory.py::test_total_price_wrong_types_rejected[100-2] PASSED   [ 23%]
+test_inventory.py::test_total_price_wrong_types_rejected[100-2.5] PASSED [ 26%]
+test_inventory.py::test_total_price_wrong_types_rejected[None-1] PASSED  [ 30%]
+test_inventory.py::test_total_price_wrong_types_rejected[True-1] PASSED  [ 34%]
+test_inventory.py::test_discount_valid PASSED                            [ 38%]
+test_inventory.py::test_discount_zero_percent PASSED                     [ 42%]
+test_inventory.py::test_discount_hundred_percent PASSED                  [ 46%]
+test_inventory.py::test_discount_out_of_range_rejected[-1] PASSED        [ 50%]
+test_inventory.py::test_discount_out_of_range_rejected[100.01] PASSED    [ 53%]
+test_inventory.py::test_discount_out_of_range_rejected[150] PASSED       [ 57%]
+test_inventory.py::test_discount_negative_total_rejected PASSED          [ 61%]
+test_inventory.py::test_discount_non_numeric_rejected PASSED             [ 65%]
+test_inventory.py::test_stock_sufficient PASSED                          [ 69%]
+test_inventory.py::test_stock_exact_boundary PASSED                      [ 73%]
+test_inventory.py::test_stock_insufficient PASSED                        [ 76%]
+test_inventory.py::test_stock_zero_available PASSED                      [ 80%]
+test_inventory.py::test_stock_negative_requested_rejected PASSED         [ 84%]
+test_inventory.py::test_stock_negative_available_rejected PASSED         [ 88%]
+test_inventory.py::test_stock_non_integer_rejected PASSED                [ 92%]
+test_inventory.py::test_insufficient_stock_logs_warning PASSED           [ 96%]
+test_inventory.py::test_invalid_input_logs_error PASSED                  [100%]
+
+============================== 26 passed in 0.04s ==============================
+
+$ python inventory.py
+Total: ₹1000.00 | After 10% discount: ₹900.00
+Stock check: 30 unit(s) available
+Stock check: 80 unit(s) NOT available
+Error: Price cannot be negative
+
+$ cat application.log
+2026-11-24 08:44:55,617 - INFO - Inventory demo started
+2026-11-24 08:44:55,617 - DEBUG - Calculating total price: price=250, quantity=4
+2026-11-24 08:44:55,617 - INFO - Total price for 4 item(s) at 250 each: 1000
+2026-11-24 08:44:55,617 - DEBUG - Applying discount: total=1000, discount=10%
+2026-11-24 08:44:55,617 - INFO - Discount of 10% applied: 1000 -> 900.0
+2026-11-24 08:44:55,617 - DEBUG - Checking stock: available=50, requested=30
+2026-11-24 08:44:55,618 - INFO - Stock available: requested 30, in stock 50
+2026-11-24 08:44:55,618 - DEBUG - Checking stock: available=50, requested=80
+2026-11-24 08:44:55,618 - WARNING - Insufficient stock: requested 80, only 50 available
+2026-11-24 08:44:55,618 - DEBUG - Calculating total price: price=-100, quantity=2
+2026-11-24 08:44:55,618 - ERROR - Negative price rejected: -100
+2026-11-24 08:44:55,618 - ERROR - Operation failed
+Traceback (most recent call last):
+  File "/home/claude/product-inventory-management/inventory.py", line 113, in main
+    calculate_total_price(-100, 2)
+  File "/home/claude/product-inventory-management/inventory.py", line 35, in calculate_total_price
+    _validate_price(price)
+  File "/home/claude/product-inventory-management/inventory.py", line 19, in _validate_price
+    raise ValueError("Price cannot be negative")
+ValueError: Price cannot be negative
+2026-11-24 08:44:55,620 - INFO - Inventory demo finished
